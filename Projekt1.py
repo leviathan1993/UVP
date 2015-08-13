@@ -8,12 +8,15 @@ import string #za oznacevanje polj (A1,...)
 
 from functools import partial
 
+import time
+
 class Battleship():
     
     def __init__(self):
         self.st_vrstic = int(input("Stevilo vrstic: "))
         self.st_stolpcev = int(input("Stevilo stolpcev: "))
         self.dol_ladje = int(input("Max dolzina: "))
+        self.seznam_ladij=("Enterprise", "Titanik", "Triglav","Rdeči Oktober")
         if self.dol_ladje > self.st_vrstic or self.dol_ladje>self.st_stolpcev:
             
             print("Predolge ladje")
@@ -22,23 +25,30 @@ class Battleship():
         self.top = tk.Tk()
         self.initial_board()
         self.add_ships()
+        self.top.attributes("-topmost", True)
         self.top.mainloop()
     
     def button_pushed(self, button_num):
+        #print(button_num,self.locations_dict)
         self.buttons_list[button_num].config(bg="red")
         if button_num in self.locations_dict:
             
             self.description.set("Zadel si "+self.locations_dict[button_num])
             self.buttons_list[button_num].config(bg="green")
-            self.locations2_dict.pop(button_num)
+            if button_num in self.locations2_dict: self.locations2_dict.pop(button_num)
         else:
             self.description.set("Zgrešil si!")
-        for i in ("Enterprise", "Titanik", "Triglav","Rdeči Oktober"):
+        for i in self.seznam_ladij:
             if i not in self.locations2_dict.values():
                 self.description.set("U sank muh %s" % i)
+                ladje = list(self.seznam_ladij)
+                ladje.remove(i)
+                self.seznam_ladij = tuple(ladje)
+                
                 
         if self.locations2_dict == {}:
             print("ZMAGA??!!")
+            time.sleep(5)
             
             self.top.destroy()
 
@@ -49,7 +59,7 @@ class Battleship():
         but_num=0
         crke_polj=string.ascii_uppercase[:self.st_vrstic]
         #za vsako vrstico izbere drugo crko
-        pravilne_resitve = []
+        #pravilne_resitve = []
         
         for row_num in crke_polj:
             for col_num in range(1,self.st_stolpcev+1):
@@ -91,8 +101,8 @@ class Battleship():
         
 
         crke_polj = string.ascii_uppercase[:self.st_vrstic]
-        seznam_ladij=("Enterprise", "Titanik", "Triglav","Rdeči Oktober")
-        for stevilo, ime in enumerate(seznam_ladij):
+        #seznam_ladij=("Enterprise", "Titanik", "Triglav","Rdeči Oktober")
+        for stevilo, ime in enumerate(self.seznam_ladij):
             gd = navpicno_ali_vodoravno()
             dolzina = dolzina_ladje(self.dol_ladje)
         #zdaj izberemo eno stevilo iz OMEJENEGA stevila iz "izbire", omejeno je 
@@ -170,6 +180,6 @@ class Battleship():
             print(x,y)
         #naredimo dodaten slovar, ki je isti kot self.locations_dict
         #da se bo igra zakljucila, ko bo zmanjkalo moznih gumbov
-        self.locations2_dict=self.locations_dict
+        self.locations2_dict = dict(self.locations_dict)
 
 BS=Battleship()
