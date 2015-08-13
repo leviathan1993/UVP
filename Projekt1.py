@@ -23,21 +23,28 @@ class Battleship():
             return None
             
         self.top = tk.Tk()
+        with open("file.txt", "w") as f:
+            pass
+        
         self.initial_board()
         self.add_ships()
         self.top.attributes("-topmost", True)
         self.top.mainloop()
     
-    def button_pushed(self, button_num):
+    def button_pushed(self, button_num, text):
+        f = open("file.txt", "a")
+            
         #print(button_num,self.locations_dict)
         self.buttons_list[button_num].config(bg="red")
         if button_num in self.locations_dict:
+            f.write(text+" ZADETEK! \n")
             
             self.description.set("Zadel si "+self.locations_dict[button_num])
             self.buttons_list[button_num].config(bg="green")
             if button_num in self.locations2_dict: self.locations2_dict.pop(button_num)
         else:
             self.description.set("Zgrešil si!")
+            f.write(text+" Pogrešio si :( \n")
         for i in self.seznam_ladij:
             if i not in self.locations2_dict.values():
                 self.description.set("U sank muh %s" % i)
@@ -63,10 +70,10 @@ class Battleship():
         
         for row_num in crke_polj:
             for col_num in range(1,self.st_stolpcev+1):
-                
+                text = row_num+str(col_num)
                 b=tk.Button(self.top, text=row_num+str(col_num),
                             bg="white", width=3, 
-                            command=partial(self.button_pushed, but_num))
+                            command=partial(self.button_pushed,but_num,text))
                 self.buttons_list.append(b)#editor adds crap here
                 ##              should be append(lower case B)/>
                 b.grid(row=crke_polj.index(row_num), column=col_num)
