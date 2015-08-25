@@ -45,13 +45,24 @@ class Battleship():
                 inv_map[v] = inv_map.get(v, [])
                 inv_map[v].append(k)
             for i in inv_map.keys():
+                koordinate += str(i) + ": "
+                
                 for j in inv_map[i]:
                 
-
-                    koordinate += str(i) + ":" + str(self.seznam_polj[j-1]) + "\n"
+                    print(j)
+                    koordinate += str(self.seznam_polj[j]) + " "
+                koordinate+="\n"
+            print(koordinate)
             
-                
-            tkinter.messagebox.showinfo("Rešitve",koordinate)
+            top = Toplevel()
+            top.title("Rešitve")
+
+            msg = Message(top, text=koordinate)
+            msg.pack()
+
+            button = Button(top, text="Exit", command=top.destroy)
+            button.pack()
+            #tkinter.messagebox.showinfo("Rešitve",koordinate)
             
 
         
@@ -126,9 +137,12 @@ class Battleship():
 
         #Naredimo seznam Polj npr. {A:{1,2,3,4}}
         self.seznam_polj = list()
+        
         for row_num in crke_polj:
             for col_num in range(1,self.st_stolpcev+1):
+                
                 self.seznam_polj.append(str(row_num)+str(col_num))
+                
                 text = row_num+str(col_num)
                 b=Button(self.frame, text=row_num+str(col_num),
                             bg="white", width=3, 
@@ -241,8 +255,8 @@ class Battleship():
                             
                         break
 
-        for x,y in self.locations_dict.items():
-            print(x,y)
+        #for x,y in self.locations_dict.items():
+            #print(x,y)
         #naredimo dodaten slovar, ki je isti kot self.locations_dict
         #da se bo igra zakljucila, ko bo zmanjkalo moznih gumbov
         self.locations2_dict = dict(self.locations_dict)
